@@ -1,5 +1,7 @@
 # Spelltime
 
+<p align="center"><img src="https://repository-images.githubusercontent.com/1380060176/ccf4129f-1cea-4c9c-b7d8-89b03b7b197a" alt="Spelltime" width="640"></p>
+
 A fullscreen **white-on-black word clock screensaver** for Linux.
 
 After a few minutes idle, the screen goes black and the time is spelled out in
