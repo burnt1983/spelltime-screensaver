@@ -26,8 +26,25 @@ if command -v systemctl >/dev/null 2>&1; then
   systemctl --user enable --now spelltime-idle.service >/dev/null 2>&1 || true
 fi
 
+if [ -d "$ROOT/cinnamon" ]; then
+  mkdir -p "${HOME}/.local/share/cinnamon/desklets" "${HOME}/.local/share/cinnamon/applets"
+  cp -a "$ROOT/cinnamon/desklets/." "${HOME}/.local/share/cinnamon/desklets/"
+  cp -a "$ROOT/cinnamon/applets/." "${HOME}/.local/share/cinnamon/applets/"
+fi
+cat > "$APPS/spelltime-desklet.desktop" << EOF
+[Desktop Entry]
+Type=Application
+Name=Spelltime Desklet
+Comment=Spelled-out word clock on the desktop
+Exec=${BIN}/spelltime --desklet
+Icon=preferences-system-time
+Terminal=false
+Categories=Utility;Clock;
+EOF
+chmod 0755 "$APPS/spelltime-desklet.desktop"
+
 echo "Installed Spelltime."
-echo "  Preview now:     spelltime"
-echo "  Idle watcher:    spelltime-idle  (enabled at login)"
-echo "  Idle delay:      5 minutes (set SPELLTIME_IDLE_MS, e.g. 180000 for 3 min)"
-echo "Move the mouse or press a key to dismiss the clock."
+echo "  Screensaver:  spelltime            (idle watcher: spelltime-idle)"
+echo "  Desklet:      spelltime --desklet  (transparent word clock)"
+echo "  Panel chip:   spelltime --panel"
+echo "Idle delay 5 minutes (SPELLTIME_IDLE_MS). Cinnamon: Desklets → Spelltime."

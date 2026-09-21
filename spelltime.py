@@ -228,7 +228,91 @@ class WordClockScreensaver(Gtk.Window):
         return True
 
 
+class WordClockGadget(Gtk.Window):
+    """Desktop desklet / panel chip — spelled time, no frame."""
+
+    def __init__(self, panel: bool = False) -> None:
+        super().__init__(Gtk.WindowType.TOPLEVEL)
+        self.set_title("Spelltime")
+        self.set_decorated(False)
+        self.set_app_paintable(True)
+        self.set_keep_above(True)
+        self.set_skip_taskbar_hint(True)
+        self.set_skip_pager_hint(True)
+        try:
+            self.stick()
+        except Exception:
+            pass
+        screen = self.get_screen()
+        visual = screen.get_rgba_visual() if screen is not None else None
+        if visual is not None:
+            self.set_visual(visual)
+
+        size = "22px" if panel else "42px"
+        css = Gtk.CssProvider()
+        css.load_from_data(
+            f"""
+            window {{ background-color: transparent; }}
+            label#clock {{
+                color: #ffffff;
+                font-size: {size};
+                font-weight: bold;
+                font-family: Sans;
+            }}
+            """.encode()
+        )
+        Gtk.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), css, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+        self.label = Gtk.Label(label="")
+        self.label.set_name("clock")
+        self.label.set_justify(Gtk.Justification.CENTER)
+        self.label.set_line_wrap(True)
+        pad = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=0)
+        pad.set_margin_top(8)
+        pad.set_margin_bottom(8)
+        pad.set_margin_start(12)
+        pad.set_margin_end(12)
+        pad.pack_start(self.label, True, True, 0)
+        self.add(pad)
+        self.add_events(Gdk.EventMask.BUTTON_PRESS_MASK)
+        self.connect("button-press-event", self.on_press)
+        self.update_time()
+        GLib.timeout_add_seconds(1, self.update_time)
+        self.show_all()
+
+    def on_press(self, _w, event) -> bool:
+        if event.button == 1:
+            try:
+                self.begin_move_drag(
+                    int(event.button), int(event.x_root), int(event.y_root), int(event.time)
+                )
+            except Exception:
+                pass
+            return True
+        if event.button == 3:
+            menu = Gtk.Menu()
+            quit_it = Gtk.MenuItem(label="Quit")
+            quit_it.connect("activate", lambda *_: Gtk.main_quit())
+            menu.append(quit_it)
+            menu.show_all()
+            menu.popup_at_pointer(event)
+            return True
+        return False
+
+    def update_time(self) -> bool:
+        now = GLib.DateTime.new_now_local()
+        self.label.set_text(spell_time(now.get_hour(), now.get_minute()))
+        return True
+
+
 def main() -> int:
+    gadget = "--desklet" in sys.argv or "--panel" in sys.argv
+    if gadget:
+        WordClockGadget(panel="--panel" in sys.argv)
+        Gtk.main()
+        return 0
+
     claim_pidfile()
 
     def handle_signal(_signum, _frame) -> None:

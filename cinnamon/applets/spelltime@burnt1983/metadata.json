@@ -1,0 +1,11 @@
+{
+  "uuid": "spelltime@burnt1983",
+  "name": "Spelltime",
+  "description": "White spelled-out word clock on the desktop",
+  "icon": "preferences-system-time",
+  "command": "spelltime --desklet",
+  "panel_command": "spelltime --panel",
+  "prevent-decorations": true,
+  "max-instances": 1,
+  "version": "1.0"
+}

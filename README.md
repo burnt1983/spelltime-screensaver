@@ -36,16 +36,22 @@ Idle delay is **5 minutes**. Change it before starting the watcher:
 SPELLTIME_IDLE_MS=180000 spelltime-idle   # 3 minutes
 ```
 
-## What it runs on
+## Desklet / panel (any Linux)
+
+| Command | What you get |
+|---|---|
+| `spelltime` | Fullscreen screensaver (white on black) |
+| `spelltime --desklet` | Frameless word clock on the desktop |
+| `spelltime --panel` | Compact chip by the panel |
+
+Works on GNOME, Cinnamon, MATE, XFCE, Budgie, LXQt, and KDE. Cinnamon: Settings → Desklets → Spelltime, or Applets for the panel chip.
+
+## Screensaver idle watcher
 
 | Desktop | Idle watcher |
 |---|---|
 | GNOME (Mutter) | IdleMonitor, no polling |
 | Cinnamon / others | logind IdleHint, or `xprintidle` if installed |
-
-This is a GTK 3 fullscreen window, so it also works as a **desklet-style gadget
-on Cinnamon** if you launch `spelltime` yourself. It is not a Cinnamon spice
-yet (those are GJS packages in the Linux Mint spices store).
 
 ## Uninstall
 
