@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Spelltime
+Comment=White-on-black word clock screensaver
+Exec=spelltime
+Icon=preferences-desktop-screensaver
+Terminal=false
+Categories=Utility;Screensaver;
+StartupNotify=false
+StartupWMClass=spelltime
+Keywords=screensaver;clock;wordclock;idle;
